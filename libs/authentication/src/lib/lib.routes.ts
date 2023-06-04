@@ -1,10 +1,18 @@
 import { Route } from '@angular/router';
-import { SignInComponent } from './containers/sign-in/sign-in.component';
-import { SignUpComponent } from './containers/sign-up/sign-up.component';
+import { AuthenticateComponent } from './containers/authenticate/authenticate.component';
 import { ResetPasswordComponent } from './containers/reset-password/reset-password.component';
+import { AuthenticationActionType } from '@chatify/core';
 
 export const authenticationRoutes: Route[] = [
-  { path: 'sign-in', component: SignInComponent },
-  { path: 'sign-up', component: SignUpComponent },
+  {
+    path: 'log-in',
+    component: AuthenticateComponent,
+    data: { action: AuthenticationActionType.LogIn },
+  },
+  {
+    path: 'sign-up',
+    component: AuthenticateComponent,
+    data: { action: AuthenticationActionType.SignUp },
+  },
   { path: 'reset-password', component: ResetPasswordComponent },
 ];
