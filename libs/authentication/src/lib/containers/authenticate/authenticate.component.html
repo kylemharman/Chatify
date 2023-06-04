@@ -1,32 +1,24 @@
 <div class="h-16 bg-slate-200"></div>
 <div class="flex justify-center">
   <!-- card -->
-  <div class="grid gap-2 w-5/6 md:w-4/6 lg:w-3/6 max-w-lg mt-8">
+  <div class="flex flex-col gap-2 w-5/6 md:w-4/6 lg:w-3/6 max-w-lg mt-8">
     <h1 class="text-6xl font-bold text-center mb-12 tracking-wide">
-      <span *ngIf="isSignUp()">Let's Get Started.</span>
-      <span *ngIf="isLogIn()">Welcome</span>
+      <span *ngIf="isSignUp()">Let's Get Started</span>
+      <span *ngIf="isLogIn()">Welcome back</span>
     </h1>
-    <!-- Google Authentication Button -->
-    <button
-      pButton
-      pRipple
-      (click)="authenticateWithGoogle()"
-      type="button"
+
+    <auth-google-button
       [label]="isLogIn() ? 'Log in with Google' : 'Sign up with Google'"
-      class="w-full hover:drop-shadow-md"
-      icon="pi pi-google"
-    ></button>
+      (googleAuthenticate)="authenticateWithGoogle()"
+    >
+    </auth-google-button>
 
     <p-divider align="center">
-      <p class="tracking-wide">
-        <span *ngIf="isLogIn()">Or, log in with your email</span>
-        <span *ngIf="isSignUp()">Or</span>
-      </p>
+      <small class="tracking-wide">or</small>
     </p-divider>
     <form [formGroup]="form" (submit)="submit()" class="grid gap-4">
       <!-- Email -->
       <div>
-        <label for="email" class="block pb-2 font-bold">Email</label>
         <auth-email-input
           formControlName="email"
           [errors]="email.errors"
@@ -46,32 +38,42 @@
       </div>
       <!-- Password -->
       <div>
-        <label for="password" class="block pb-2 font-bold">Password</label>
         <auth-password-input
           formControlName="password"
           [errors]="password.errors"
         >
         </auth-password-input>
-        <div *ngIf="password.touched && password.errors" class="my-2">
-          <shared-input-error-message
-            *ngIf="password.errors.required"
-            message="Password is required"
+        <div class="flex items-center justify-between my-2">
+          <div>
+            <ng-container *ngIf="password.touched && password.errors">
+              <shared-input-error-message
+                *ngIf="password.errors.required"
+                message="Password is required"
+              >
+              </shared-input-error-message>
+              <shared-input-error-message
+                *ngIf="password.errors.minlength"
+                message="Password must be at least {{
+                  passwordMinLength
+                }} characters long"
+              >
+              </shared-input-error-message>
+              <shared-input-error-message
+                *ngIf="password.errors.maxlength"
+                message="Password must not be longer than {{
+                  passwordMaxLength
+                }} characters"
+              >
+              </shared-input-error-message>
+            </ng-container>
+          </div>
+          <small
+            *ngIf="isLogIn()"
+            (click)="navigate(authAction.ResetPassword)"
+            class="hover:cursor-pointer"
           >
-          </shared-input-error-message>
-          <shared-input-error-message
-            *ngIf="password.errors.minlength"
-            message="Password must be at least {{
-              passwordMinLength
-            }} characters long"
-          >
-          </shared-input-error-message>
-          <shared-input-error-message
-            *ngIf="password.errors.maxlength"
-            message="Password must not be longer than {{
-              passwordMaxLength
-            }} characters"
-          >
-          </shared-input-error-message>
+            Forgot Password?
+          </small>
         </div>
       </div>
       <button
@@ -79,21 +81,19 @@
         pRipple
         type="submit"
         label="Log In"
-        class="p-button-outlined"
+        class="p-button-rounded"
         [disabled]="form.invalid"
       ></button>
     </form>
 
     <ng-container *ngIf="isLogIn()">
       <p-divider></p-divider>
-      <button
-        pButton
-        pRipple
-        type="button"
-        label="Forgot Password?"
-        class="p-button-text p-button-plain"
-        (click)="resetPassword()"
-      ></button>
+      <small
+        (click)="navigate(authAction.SignUp)"
+        class="text-center hover:cursor-pointer py-2"
+      >
+        Don't have an account? Sign up
+      </small>
     </ng-container>
   </div>
 </div>

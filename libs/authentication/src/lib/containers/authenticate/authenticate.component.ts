@@ -22,6 +22,7 @@ import { InputErrorMessageComponent } from '@chatify/shared';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { AuthenticationActionType } from '@chatify/core';
+import { GoogleButtonComponent } from '../../components/google-button/google-button.component';
 
 @Component({
   selector: 'auth-authenticate',
@@ -35,6 +36,7 @@ import { AuthenticationActionType } from '@chatify/core';
     EmailInputComponent,
     PasswordInputComponent,
     InputErrorMessageComponent,
+    GoogleButtonComponent,
   ],
   templateUrl: './authenticate.component.html',
   styleUrls: ['./authenticate.component.scss'],
@@ -46,6 +48,7 @@ export class AuthenticateComponent implements OnInit {
   private _auth = inject(AuthenticationService);
   readonly passwordMinLength = 6;
   readonly passwordMaxLength = 30;
+  readonly authAction = AuthenticationActionType;
 
   @Input({ required: true }) action = AuthenticationActionType.LogIn;
 
@@ -81,8 +84,8 @@ export class AuthenticateComponent implements OnInit {
     await this._auth.signInWithAuthProvider(new GoogleAuthProvider());
   }
 
-  async resetPassword(): Promise<void> {
-    await this._router.navigateByUrl('reset-password');
+  async navigate(location: AuthenticationActionType): Promise<void> {
+    await this._router.navigateByUrl(location);
   }
 
   private async _logIn(): Promise<void> {
